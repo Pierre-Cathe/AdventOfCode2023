@@ -21,7 +21,7 @@ def parse_game(line):
     return game_id, showings
 
 
-def get_games_from_file(filename):
+def parse_games_from_file(filename):
     games = []
     with open(filename) as input:
         for line in input:
@@ -39,6 +39,6 @@ def get_id_if_valid(game, limits):
 
 
 if __name__ == "__main__":
-    all_games = get_games_from_file(INPUT_FILE)
+    all_games = parse_games_from_file(INPUT_FILE)
     all_valid_games = list(map(partial(get_id_if_valid, limits=PART_1_LIMITS), all_games))
     print(sum(all_valid_games))
