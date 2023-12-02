@@ -1,6 +1,6 @@
 
 
-FILENAME = "./data"
+FILENAME = "input"
 digit_list = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', *[x for x in '0123456789']]
 digit_dict = {
     'one': '1',
