@@ -23,8 +23,8 @@ def parse_game(line):
 
 def parse_games_from_file(filename):
     games = []
-    with open(filename) as input:
-        for line in input:
+    with open(filename) as data:
+        for line in data:
             games.append(parse_game(line.rstrip()))
     return games
 
