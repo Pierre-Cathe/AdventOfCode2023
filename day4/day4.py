@@ -15,7 +15,10 @@ def parse_card_value(line):
     raw_winning_numbers, raw_numbers_you_have = all_numbers.split('|')
     winning_numbers = clean_up_numbers(raw_winning_numbers)
     numbers_you_have = clean_up_numbers(raw_numbers_you_have)
-
+    numbers_you_have_that_are_winning = [number for number in numbers_you_have if number in winning_numbers]
+    if len(numbers_you_have_that_are_winning) > 0:
+        return pow(2, len(numbers_you_have_that_are_winning) - 1)
+    return 0
 
 
 def run():
