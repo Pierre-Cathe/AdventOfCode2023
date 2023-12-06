@@ -1,10 +1,12 @@
-
+from tqdm import tqdm
 
 FILENAME = './input'
 
 
 def clean_up_numbers(raw_numbers):
-    return [int(number) for number in raw_numbers.split(' ') if number != '']
+    # return [int(number) for number in raw_numbers.split(' ') if number != '']
+    number = raw_numbers.replace(' ', '')
+    return [int(number)]
 
 
 def parse_races(filename):
@@ -28,7 +30,7 @@ def can_beat_record(time_pressed, time_available, record_distance):
 def compute_number_of_ways_to_win(race):
     time_available, record_distance = race
     possible_wins = 0
-    for time_pressed in range(int(time_available/2), 0, -1):
+    for time_pressed in tqdm(range(int(time_available/2), 0, -1)):
         if can_beat_record(time_pressed, time_available, record_distance):
             possible_wins += 2
         else:
