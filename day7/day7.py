@@ -5,6 +5,7 @@ FILENAME = './input'
 # FILENAME = './example'
 
 CARD_VALUES_ASC = '23456789TJQKA'
+CARD_VALUES_ASC = 'J23456789TQKA'   # Part 2
 
 
 FIVE_OF_A_KIND = 6
@@ -27,10 +28,22 @@ def parse(filename):
 
 def get_hand_type(hand):
     number_of_copies = [0, 0, 0, 0, 0]
+    most_present_non_joker = hand[0]
+    max_number_of_copies = 0
     for i in range(len(hand)):
         for card in hand:
             if card == hand[i]:
                 number_of_copies[i] += 1
+                if number_of_copies[i] > max_number_of_copies and hand[i] != 'J':
+                    max_number_of_copies = number_of_copies[i]
+                    most_present_non_joker = hand[i]
+    number_of_jokers = 0
+    if 'J' in hand:
+        number_of_jokers = number_of_copies[hand.index('J')]
+    for i in range(len(hand)):
+        if hand[i] == 'J' or hand[i] == most_present_non_joker:
+            number_of_copies[i] = max_number_of_copies + number_of_jokers
+
     hand_repr = ''.join([str(x) for x in sorted(number_of_copies, reverse=True)])
     match hand_repr:
         case '55555':
