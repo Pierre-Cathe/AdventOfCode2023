@@ -1,7 +1,7 @@
 
 
 FILENAME = './input'
-# FILENAME = './example'
+# FILENAME = './example1'
 
 
 def clean_up_numbers(raw_numbers):

@@ -2,7 +2,7 @@ from tqdm import tqdm
 from functools import cmp_to_key
 
 FILENAME = './input'
-# FILENAME = './example'
+# FILENAME = './example1'
 
 CARD_VALUES_ASC = '23456789TJQKA'
 CARD_VALUES_ASC = 'J23456789TQKA'   # Part 2

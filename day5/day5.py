@@ -1,7 +1,7 @@
 from tqdm import tqdm
 
 FILENAME = './input'
-# FILENAME = './example'
+# FILENAME = './example1'
 
 
 def get_map_value(map_to_read, index):

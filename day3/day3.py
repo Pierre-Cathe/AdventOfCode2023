@@ -1,6 +1,6 @@
 
 FILENAME = './input'
-# FILENAME = './example'
+# FILENAME = './example1'
 NUMBERS = "0123456789"
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
