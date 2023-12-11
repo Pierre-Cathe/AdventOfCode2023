@@ -3,6 +3,9 @@
 FILENAME = './input'
 # FILENAME = './example'
 
+EXPANSION_FACTOR = 999_999
+#EXPANSION_FACTOR = 99
+
 
 def parse_data(filename):
     universe = []
@@ -41,13 +44,44 @@ def get_manhattan_distance(galaxy_1, galaxy_2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
+def expand_galaxies_coords(universe, galaxies, expansion_factor):
+    lines_to_expand = []
+    cols_to_expand = []
+    for i in range(len(universe)):
+        if '#' not in universe[i]:
+            lines_to_expand.append(i)
+    for i in range(len(universe[0])):
+        col = [line[i] for line in universe]
+        if '#' not in col:
+            cols_to_expand.append(i)
+    new_galaxies = []
+    for galaxy in galaxies:
+        x, y = galaxy
+        new_x, new_y = x, y
+        for line in lines_to_expand:
+            if line < x:
+                new_x += expansion_factor
+        for col in cols_to_expand:
+            if col < y:
+                new_y += expansion_factor
+        new_galaxies.append((new_x, new_y))
+    return new_galaxies
+
+
 def run():
     universe = parse_data(FILENAME)
-    expanded_universe = expand(universe)
-    for line in expanded_universe:
-        print(line)
+
+    # Naive part 1 method
+    # expanded_universe = expand(universe)
+    # for line in expanded_universe:
+    #     print(line)
+    # shortest_paths = {}
+    # galaxies = get_galaxies_locations(expanded_universe)
+
+    galaxies = get_galaxies_locations(universe)
+    galaxies = expand_galaxies_coords(universe, galaxies, EXPANSION_FACTOR)
+
     shortest_paths = {}
-    galaxies = get_galaxies_locations(expanded_universe)
     for starting_galaxy in galaxies:
         for other_galaxy in galaxies:
             if starting_galaxy != other_galaxy:
