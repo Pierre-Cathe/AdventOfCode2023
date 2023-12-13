@@ -81,18 +81,70 @@ def unfold(springs):
     for spring_rep, numbers in springs:
         spring_rep = f'{spring_rep}?{spring_rep}?{spring_rep}?{spring_rep}?{spring_rep}'
         new_numbers = []
-        for i in range(4):
+        for i in range(5):
             new_numbers.extend(numbers)
         unfolded.append((spring_rep, new_numbers))
     return unfolded
+
+
+# Compute all legal arrangements by the following method :
+# Take the last group and try placing it at all available positions and then do the next group
+def compute_number_of_possible_arrangements_greedy_match(spring, memo):
+    spring_rep, numbers = spring
+    if sum(numbers) + sum([1 for number in numbers]) - 1 > len(spring_rep):
+        return 0
+    if len(numbers) == 0:
+        if '#' in spring_rep:
+            return 0
+        return 1
+    if len(spring_rep) == 0:
+        return 0
+    if len(spring_rep) >= 0 and len(numbers) >= 0:
+        number_of_arrangements = 0
+        if (spring_rep, tuple(numbers)) in memo:
+            return memo[(spring_rep, tuple(numbers))]
+        # find all places in spring_rep where the last group can be placed
+        for i in range(len(spring_rep)-1, -1, -1):
+            is_index_available = True
+            for j in range(numbers[-1]):
+                if i + 1 < len(spring_rep) and spring_rep[i+1] == '#':
+                    is_index_available = False
+                    break
+                if i-j >= 0:
+                    if spring_rep[i-j] == '.':
+                        is_index_available = False
+                        break
+                else:
+                    is_index_available = False
+                    break
+            if (i-j) - 1 >= 0 and spring_rep[(i-j)-1] == '#':  # account for the fact that groups must be separated by a '.'
+                is_index_available = False
+            if '#' in spring_rep[i+1:]:  # check that i'm not skipping a #
+                is_index_available = False
+            if is_index_available:
+                new_string_index = (i-j)-1   # -1 to account for the fact that groups must be separated by 1 character
+                if new_string_index < 0:
+                    new_string_index = 0
+                new_spring_rep = spring_rep[:new_string_index]
+                new_numbers = numbers[:-1]
+                number_of_arrangements += compute_number_of_possible_arrangements_greedy_match((new_spring_rep, new_numbers), memo)
+        if len(numbers) < 30:
+            memo[spring_rep, tuple(numbers)] = number_of_arrangements
+        return number_of_arrangements
 
 
 def run():
     springs = parse_data(FILENAME)
     springs = unfold(springs)
     possible_arrangements = []
-    for spring in tqdm(springs):
-        possible_arrangements.append(enumerate_number_of_possible_arrangements(spring))
+    i = 0
+    for spring in tqdm(springs, miniters=1):
+        i += 1
+        # possible_arrangements = enumerate_number_of_possible_arrangements(spring)   # Enumeration method, not good enough for part 2
+        value = compute_number_of_possible_arrangements_greedy_match(spring, {})
+        # print((spring, value))
+        possible_arrangements.append(value)
+    print(possible_arrangements)
     print(sum(possible_arrangements))
 
 
