@@ -34,10 +34,17 @@ def roll_north(platform):
 
 
 def rotate_clockwise(platform):
-    pass
+    new_platform = ['' for x in range(len(platform))]
+    for x in range(len(platform)):
+        new_platform[x] = ''.join([platform[(len(platform)-t)-1][x] for t in range(len(platform))])
+    return new_platform
 
 
 def cycle(platform):
+    for i in range(4):
+        roll_north(platform)
+        platform = rotate_clockwise(platform)
+    return platform
 
 
 def calculate_load(platform):
@@ -53,13 +60,35 @@ def calculate_load(platform):
 
 def run():
     platform = parse_data(FILENAME)
-    seen_platform = []
-    roll_north(platform)
-    for line in platform:
-        print(line)
-    load = calculate_load(platform)
+    # roll_north(platform)
+    iterations = 0
+    seen_platforms = []
+    loads = []
+    while iterations < 1_000_000_000:
+        platform = cycle(platform)
+        iterations += 1
+        string_rep = '\n'.join(platform)
+        #print(string_rep + '\n')
+        if ''.join(platform) in seen_platforms:
+            print(iterations)
+            print(seen_platforms.index(''.join(platform)))
+            break
+        seen_platforms.append(''.join(platform))
+        loads.append(calculate_load(platform))
+    start_of_loop = seen_platforms.index(''.join(platform)) + 1
+    period = iterations - start_of_loop
+    looping_iterations = 1_000_000_000 - start_of_loop
+    loop_modulus = looping_iterations % period
+    platform_at_billion_string_form = seen_platforms[start_of_loop + loop_modulus]
+    platform_at_billion = []
+    for x in range(len(platform)):
+        platform_at_billion.append(platform_at_billion_string_form[x*len(platform):x*len(platform) + len(platform)])
+
+    load = loads[start_of_loop+loop_modulus-1]
+    print('\n'.join(platform_at_billion))
     print(load)
 
+    pass
 
 if __name__ == '__main__':
     run()
