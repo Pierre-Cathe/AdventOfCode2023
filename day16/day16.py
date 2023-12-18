@@ -1,7 +1,8 @@
-
+from tqdm import tqdm
 
 FILENAME = './input'
 # FILENAME = './example'
+
 
 class Directions:
     RIGHT, LEFT, UP, DOWN = (0, 1), (0, -1), (-1, 0), (1, 0)
@@ -90,24 +91,26 @@ def simulate_beam(contraption, x, y, direction, seen_tiles_and_directions):
                         simulate_beam(contraption, x, y, direction, seen_tiles_and_directions)
 
 
-def run():
-    contraption = parse_data(FILENAME)
+def compute_energised_tiles(contraption, start_x, start_y, start_dir):
     seen_tiles_and_directions = set()
-    simulate_beam(contraption, 0, 0, Directions.RIGHT, seen_tiles_and_directions)
+    simulate_beam(contraption, start_x, start_y, start_dir, seen_tiles_and_directions)
     energised_tiles = []
     for x, y, direction in seen_tiles_and_directions:
         if (x, y) not in energised_tiles:
             energised_tiles.append((x, y))
-    print(len(energised_tiles))
-    sb = []
-    for x in range(len(contraption)):
-        for y in range(len(contraption[0])):
-            if (x, y) in energised_tiles:
-                sb.append('#')
-            else:
-                sb.append('.')
-        sb.append('\n')
-    print(''.join(sb))
+    return len(energised_tiles)
+
+
+def run():
+    contraption = parse_data(FILENAME)
+    total_energised_tiles = []
+    for x in tqdm(range(len(contraption))):
+        total_energised_tiles.append(compute_energised_tiles(contraption, x, 0, Directions.RIGHT))
+        total_energised_tiles.append(compute_energised_tiles(contraption, x, len(contraption[0])-1, Directions.LEFT))
+    for y in tqdm(range(len(contraption[0]))):
+        total_energised_tiles.append(compute_energised_tiles(contraption, 0, y, Directions.DOWN))
+        total_energised_tiles.append(compute_energised_tiles(contraption, len(contraption)-1, y, Directions.UP))
+    print(max(total_energised_tiles))
 
 
 if __name__ == '__main__':
